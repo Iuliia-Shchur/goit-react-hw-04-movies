@@ -12,7 +12,7 @@ const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const movieCardBaseUrl = "http://image.tmdb.org/t/p/w154";
-  const { url } = useRouteMatch();
+  const { url, path } = useRouteMatch();
 
   useEffect(() => {
     fetchMoviesAPI
@@ -38,8 +38,8 @@ const MovieDetailsPage = () => {
           </div>
           <div>
             <h2>{movie.original_title || movie.title}</h2>
-            <p>{movie.release_date}</p>
-            <p>User score:{movie.vote_average * 10}%</p>
+            <span>({movie.release_date})</span>
+            <p>User score: {movie.vote_average * 10}%</p>
             <h3>Genres</h3>
             <p>{movie.genres.map((genre) => genre.name).join(", ")}</p>
             <p>Overview</p>
@@ -47,7 +47,15 @@ const MovieDetailsPage = () => {
           </div>
 
           <h2>Additional information</h2>
-          <Suspense fallback={<Loader />}>
+          <ul>
+            <li>
+              <NavLink to={`${url}/cast`}>Cast</NavLink>
+            </li>
+            <li>
+              <NavLink to={`${url}/reviews`}>Reviews</NavLink>
+            </li>
+          </ul>
+          {/* <Suspense fallback={<Loader />}>
             <Switch>
               <Route exact path={`${url}/cast`}>
                 {movie && <Cast />}
@@ -57,9 +65,15 @@ const MovieDetailsPage = () => {
                 {movie && <MovieReviews />}
               </Route>
             </Switch>
-          </Suspense>
+          </Suspense> */}
         </>
       )}
+
+      <hr />
+
+      {/* <Route path={"/movies/:movieId/cast"}>
+          {movie && <Cast />}
+        </Route> */}
     </>
   );
 };

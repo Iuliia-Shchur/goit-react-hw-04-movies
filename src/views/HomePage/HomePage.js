@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Route, Switch } from "react-router";
+import { Route, Switch, useParams } from "react-router";
 import fetchMoviesAPI from "../../services/movies-api";
 import Loader from "../../Components/Loader/Loader";
 import Button from "../../Components/Button/Button";
@@ -11,6 +11,8 @@ const HomePage = () => {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { url } = useParams();
+  const ImageBaseUrl = "https://image.tmdb.org/t/p/w500";
 
   useEffect(() => {
     setLoading(true);
@@ -30,6 +32,8 @@ const HomePage = () => {
     };
     fetchTrendingMoviesHomePage();
   }, [page]);
+
+  console.log(movies);
 
   const loadMore = () => {
     setLoading(!loading);
@@ -51,13 +55,27 @@ const HomePage = () => {
     <>
       <>
         <h1>Trending movies</h1>
-        <Suspense fallback={<Loader />}>
-          <Switch>
-            <Route>
-              {moviesListNotEmpty && <MovieList movies={movies} exact />}
-            </Route>
-          </Switch>
-        </Suspense>
+        <>
+          <ul>
+            {movies.map((movie) => (
+              <li key={movie.id}>
+                <Link to={`movies/${movie.id}`}>
+                  <h2>{movie.title || movie.original_title}</h2>
+                  <img
+                    src={
+                      movie.poster_path
+                        ? `${ImageBaseUrl}${movie.poster_path}`
+                        : noPosterAvailable
+                    }
+                    alt={movie.title}
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+
+        {/* {moviesListNotEmpty && <MovieList movies={movies} exact />} */}
       </>
       <>{loadMoreMovies && <Button onLoadMore={loadMore} />}</>
     </>

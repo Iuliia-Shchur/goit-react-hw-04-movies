@@ -4,7 +4,7 @@ import { Link, Route } from "react-router-dom";
 import fetchMoviesAPI from "../../services/movies-api";
 import noCast from "../../images/no-cast.jpg";
 
-const Cast = () => {
+const Cast = ({ movie }) => {
   const { movieId } = useParams();
   const [casts, setCasts] = useState([]);
   const castImageBaseUrl = "https://image.tmdb.org/t/p/w45";

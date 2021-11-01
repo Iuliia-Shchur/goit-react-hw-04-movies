@@ -18,7 +18,8 @@ const Navigation = () => {
           </li>
           <li>
             <NavLink
-              to="/search-movies"
+              exact
+              to="/movies"
               className={s.link}
               activeClassName={s.activeLink}
             >

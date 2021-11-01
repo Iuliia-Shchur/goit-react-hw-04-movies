@@ -3,14 +3,21 @@ import { Switch, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Navigation from "./Navigation/Navigation";
 import Loader from "./Components/Loader/Loader";
-// import HomePage from "./Components/HomePage/HomePage";
-// import MoviesPage from "./views/MoviesPage/MoviesPage";
-// import MovieDetailsPage from "./views/MovieDetailsPage/MovieDetailsPage";
-// import Cast from "./views/MovieDetailsPage/Cast";
-// import NotFoundView from "./views/NotFound/NotFound";
+import Container from "./Components/Container/Container";
 
-const HomePage = lazy(() => import("./views/HomePage/HomePage"));
-const MoviesPage = lazy(() => import("./views/MoviesPage/MoviesPage"));
+const HomePage = lazy(() =>
+  import("./views/HomePage/HomePage" /* webpackChunkName: "home-view" */)
+);
+const MoviesPage = lazy(() =>
+  import("./views/MoviesPage/MoviesPage" /* webpackChunkName: "movies-view" */)
+);
+const MovieDetailsPage = lazy(() =>
+  import("./views/MovieDetailsPage/MovieDetailsPage")
+);
+const Cast = lazy(() => import("./views/MovieDetailsPage/Cast"));
+const MovieReviews = lazy(() =>
+  import("./views/MovieDetailsPage/MovieReviews")
+);
 const NotFound = lazy(() => import("./views/NotFound/NotFound"));
 
 function App() {
@@ -22,9 +29,19 @@ function App() {
           <Route path="/" exact>
             <HomePage />
           </Route>
-          <Route path="/search-movies">
+
+          <Route path="/movies" exact>
             <MoviesPage />
           </Route>
+
+          <Route path="/movies/:movieId" exact>
+            <MovieDetailsPage />
+          </Route>
+
+          <Route path="movies/:movieId/cast">
+            <Cast />
+          </Route>
+
           <Route>
             <NotFound />
           </Route>
