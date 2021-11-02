@@ -1,0 +1,23 @@
+.notext {
+  color: white;
+  font-size: 26px;
+}
+
+.author {
+  color: #ad1b81;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.text {
+  color: white;
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 25px;
+}
+
+.wrapper {
+  padding: 45px;
+}

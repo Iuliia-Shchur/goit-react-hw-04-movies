@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import { Link, Route } from "react-router-dom";
 import fetchMoviesAPI from "../../services/movies-api";
 import noCast from "../../images/no-cast.jpg";
+import s from "./Cast.module.css";
 
-const Cast = ({ movie }) => {
+const Cast = () => {
   const { movieId } = useParams();
   const [casts, setCasts] = useState([]);
   const castImageBaseUrl = "https://image.tmdb.org/t/p/w45";
@@ -18,11 +18,12 @@ const Cast = ({ movie }) => {
 
   return (
     <div>
+      <h2 className={s.title}>Actors</h2>
       {casts && (
         <>
-          <ul>
+          <ul className={s.moviesGallery}>
             {casts.map((cast) => (
-              <li key={cast.id}>
+              <li key={cast.id} className={s.moviesGalleryItem}>
                 <img
                   src={
                     cast.profile_path
@@ -30,8 +31,9 @@ const Cast = ({ movie }) => {
                       : noCast
                   }
                   alt={cast.name}
+                  className={s.moviesGalleryItemImage}
                 />
-                <p>{cast.original_name || cast.name}</p>
+                <p className={s.text}>{cast.original_name || cast.name}</p>
               </li>
             ))}
           </ul>

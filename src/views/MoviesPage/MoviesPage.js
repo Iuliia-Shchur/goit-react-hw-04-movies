@@ -1,98 +1,96 @@
-import { useState, useEffect, lazy, Suspense } from "react";
-import {
-  Route,
-  useRouteMatch,
-  Switch,
-  useHistory,
-  useLocation,
-} from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import fetchMoviesAPI from "../../services/movies-api";
-import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 import s from "./MoviesPage.module.css";
-import Loader from "../../Components/Loader/Loader";
-
-const MovieList = lazy(() => import("../../Components/MoviesList/MoviesList"));
-const MovieDetailsPage = lazy(() =>
-  import("../MovieDetailsPage/MovieDetailsPage")
-);
+import SearchBar from "../../Components/SearchBar/SearchBar";
+import noPosterAvailable from "../../images/no-poster-available.jpg";
+import Button from "../../Components/Button/Button";
 
 const MoviesPage = () => {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const { url } = useRouteMatch();
-  const history = useHistory();
-  const location = useLocation();
+  const ImageBaseUrl = "https://image.tmdb.org/t/p/w342";
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const handleFormSubmit = (query) => {
     setQuery(query);
     setMovies([]);
   };
 
-  const handleQueryChange = (e) => {
-    setQuery(e.target.value.toLowerCase());
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (query.trim() === "") {
-      return toast.error("Enter your query!");
-    }
-    history.push({ ...location, search: `query=${query}` });
-    handleFormSubmit(query);
-    setQuery("");
-  };
-
   useEffect(() => {
     if (!query) return;
-    fetchMoviesAPI
-      .fetchMovies(query)
-      .then((movies) => {
-        setMovies((prev) => [...prev, ...movies]);
-        console.log(movies);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  }, [query]);
+    setLoading(true);
+
+    const fetchSearchMovies = async () => {
+      try {
+        const results = await fetchMoviesAPI.fetchMovies(query, page);
+        setMovies((movies) => [...movies, ...results]);
+        if (page !== 1) {
+          scrollWindow();
+        }
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSearchMovies();
+  }, [query, page]);
+
+  const loadMore = () => {
+    setLoading(!loading);
+    setPage((prev) => prev + 1);
+    setLoading(loading);
+  };
+
+  const scrollWindow = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
+  };
 
   const moviesListNotEmpty = movies.length !== 0;
+  const loadMoreMovies = movies.length > 0 && movies.length >= 20;
 
   return (
     <>
-      <div>
-        <header className={s.Searchbar}>
-          <form className={s.SearchForm} onSubmit={handleSubmit}>
-            <button type="submit" className={s.SearchFormButton}>
-              <span className={s.SearchFormButtonLabel}>Search</span>
-            </button>
-
-            <input
-              name="query"
-              value={query}
-              onChange={handleQueryChange}
-              className={s.SearchFormInput}
-              type="text"
-              autoComplete="off"
-              autoFocus
-              placeholder="Search movies"
-            />
-          </form>
-        </header>
-      </div>
-      <div>
-        <Suspense fallback={<Loader />}>
-          <Switch>
-            <Route exact path="/movies">
-              {moviesListNotEmpty && <MovieList movies={movies} />}
-            </Route>
-            <Route path={`${url}/:movieId`}>
-              <MovieDetailsPage />
-            </Route>
-          </Switch>
-        </Suspense>
-      </div>
+      <>
+        <SearchBar onSubmit={handleFormSubmit} />
+        <>
+          <ul className={s.moviesGallery}>
+            {moviesListNotEmpty &&
+              movies.map((movie) => (
+                <li key={movie.id} className={s.moviesGalleryItem}>
+                  <Link to={`movies/${movie.id}`}>
+                    <h2 className={s.Title}>
+                      {movie.name || movie.original_title}
+                    </h2>
+                    <img
+                      src={
+                        movie.poster_path
+                          ? `${ImageBaseUrl}${movie.poster_path}`
+                          : noPosterAvailable
+                      }
+                      alt={movie.title}
+                      className={s.moviesGalleryItemImage}
+                    />
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        </>
+        <>{loadMoreMovies && <Button onLoadMore={loadMore} />}</>
+      </>
     </>
   );
+};
+
+MoviesPage.propTypes = {
+  onSubmit: PropTypes.func,
+  onLoadMore: PropTypes.func,
 };
 
 export default MoviesPage;

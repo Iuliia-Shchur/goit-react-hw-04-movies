@@ -14,10 +14,10 @@ const fetchTrendingMovies = async (page = 1) => {
   }
 };
 
-const fetchMovies = async (query) => {
+const fetchMovies = async (query, page = 1) => {
   try {
     const { data } = await axios.get(
-      `/3/search/movie?api_key=${KEY}&language=en-US&query=${query}&include_adult=false`
+      `/3/search/movie?api_key=${KEY}&language=en-US&query=${query}&page=${page}&include_adult=false`
     );
 
     return data.results;

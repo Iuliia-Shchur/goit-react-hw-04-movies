@@ -3,7 +3,6 @@ import { Switch, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Navigation from "./Navigation/Navigation";
 import Loader from "./Components/Loader/Loader";
-import Container from "./Components/Container/Container";
 
 const HomePage = lazy(() =>
   import("./views/HomePage/HomePage" /* webpackChunkName: "home-view" */)
@@ -14,16 +13,14 @@ const MoviesPage = lazy(() =>
 const MovieDetailsPage = lazy(() =>
   import("./views/MovieDetailsPage/MovieDetailsPage")
 );
-const Cast = lazy(() => import("./views/MovieDetailsPage/Cast"));
-const MovieReviews = lazy(() =>
-  import("./views/MovieDetailsPage/MovieReviews")
-);
+
 const NotFound = lazy(() => import("./views/NotFound/NotFound"));
 
 function App() {
   return (
     <div>
       <Navigation />
+
       <Suspense fallback={<Loader />}>
         <Switch>
           <Route path="/" exact>
@@ -34,12 +31,8 @@ function App() {
             <MoviesPage />
           </Route>
 
-          <Route path="/movies/:movieId" exact>
+          <Route path="/movies/:movieId">
             <MovieDetailsPage />
-          </Route>
-
-          <Route path="movies/:movieId/cast">
-            <Cast />
           </Route>
 
           <Route>
