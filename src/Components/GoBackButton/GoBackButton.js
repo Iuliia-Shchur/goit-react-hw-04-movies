@@ -1,5 +1,4 @@
 import s from "./GoBackButton.module.css";
-import { useHistory, useLocation } from "react-router";
 
 const GoBackButton = ({ handleGoBackButton }) => {
   return (

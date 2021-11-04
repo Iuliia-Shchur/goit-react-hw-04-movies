@@ -58,7 +58,7 @@ const HomePage = () => {
 };
 
 HomePage.propTypes = {
-  onLoadMore: PropTypes.func.isRequired,
+  onLoadMore: PropTypes.func,
 };
 
 export default HomePage;

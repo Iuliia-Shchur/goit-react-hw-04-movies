@@ -77,6 +77,7 @@ const MoviesPage = () => {
             <Route exact path="/movies">
               <SearchBar onSubmit={handleFormSubmit} />
               {moviesListNotEmpty && <MovieList movies={movies} />}
+              {/* {noMovies && <NotFound/>} */}
             </Route>
           </Switch>
         </Suspense>

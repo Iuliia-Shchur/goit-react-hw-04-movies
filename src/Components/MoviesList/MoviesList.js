@@ -6,6 +6,7 @@ const MoviesList = ({ movies }) => {
   const ImageBaseUrl = "https://image.tmdb.org/t/p/w342";
   const moviesListNotEmpty = movies.length !== 0;
   const location = useLocation();
+
   return (
     <ul className={s.moviesGallery}>
       {moviesListNotEmpty &&

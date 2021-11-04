@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import {
   useParams,
   useRouteMatch,
@@ -10,7 +10,7 @@ import { NavLink, Route, Switch } from "react-router-dom";
 import MovieDetails from "../../Components/MovieDetails/MovieDetails";
 import GoBackButton from "../../Components/GoBackButton/GoBackButton";
 import s from "./MovieDetailsPage.module.css";
-import { Suspense } from "react";
+
 const Cast = lazy(() => import("../../Components/Cast/Cast"));
 const MovieReviews = lazy(() =>
   import("../../Components/MovieReviews/MovieReviews")
@@ -22,7 +22,8 @@ const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const { url } = useRouteMatch();
-
+  const [query, setQuery] = useState("");
+  console.log(location);
   useEffect(() => {
     fetchMoviesAPI
       .fetchMovieDetails(movieId)
@@ -33,6 +34,7 @@ const MovieDetailsPage = () => {
   const handleGoBackButton = () => {
     history.push(location?.state?.from ?? "/");
     console.log(location);
+    setQuery(query);
   };
 
   return (
@@ -51,7 +53,7 @@ const MovieDetailsPage = () => {
                 to={{
                   pathname: `${url}/cast`,
                   state: {
-                    from: location,
+                    from: location ?? "/movie",
                   },
                 }}
                 className={s.link}
@@ -64,7 +66,7 @@ const MovieDetailsPage = () => {
                 to={{
                   pathname: `${url}/reviews`,
                   state: {
-                    from: location,
+                    from: location ?? "/movie",
                   },
                 }}
                 className={s.link}
