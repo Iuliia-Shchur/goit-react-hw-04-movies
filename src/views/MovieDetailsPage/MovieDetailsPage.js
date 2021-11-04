@@ -10,7 +10,7 @@ import { NavLink, Route, Switch } from "react-router-dom";
 import MovieDetails from "../../Components/MovieDetails/MovieDetails";
 import GoBackButton from "../../Components/GoBackButton/GoBackButton";
 import s from "./MovieDetailsPage.module.css";
-
+import { Suspense } from "react";
 const Cast = lazy(() => import("../../Components/Cast/Cast"));
 const MovieReviews = lazy(() =>
   import("../../Components/MovieReviews/MovieReviews")
@@ -31,7 +31,7 @@ const MovieDetailsPage = () => {
   }, [movieId]);
 
   const handleGoBackButton = () => {
-    history.push(location?.state?.from?.location ?? "/");
+    history.push(location?.state?.from ?? "/");
     console.log(location);
   };
 
@@ -47,26 +47,44 @@ const MovieDetailsPage = () => {
         <div className={s.linkWrapper}>
           <ul>
             <li>
-              <NavLink to={`${url}/cast`} className={s.link}>
+              <NavLink
+                to={{
+                  pathname: `${url}/cast`,
+                  state: {
+                    from: location,
+                  },
+                }}
+                className={s.link}
+              >
                 Cast
               </NavLink>
             </li>
             <li>
-              <NavLink to={`${url}/reviews`} className={s.link}>
+              <NavLink
+                to={{
+                  pathname: `${url}/reviews`,
+                  state: {
+                    from: location,
+                  },
+                }}
+                className={s.link}
+              >
                 Reviews
               </NavLink>
             </li>
           </ul>
         </div>
         <hr />
-        <Switch>
-          <Route path="/movies/:movieId/cast">
-            <Cast />
-          </Route>
-          <Route path="/movies/:movieId/reviews">
-            <MovieReviews />
-          </Route>
-        </Switch>
+        <Suspense>
+          <Switch>
+            <Route path="/movies/:movieId/cast">
+              <Cast />
+            </Route>
+            <Route path="/movies/:movieId/reviews">
+              <MovieReviews />
+            </Route>
+          </Switch>
+        </Suspense>
       </>
     </>
   );

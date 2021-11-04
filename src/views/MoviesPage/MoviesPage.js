@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 
 import fetchMoviesAPI from "../../services/movies-api";
 import PropTypes from "prop-types";
-
+import Loader from "../../Components/Loader/Loader";
 import SearchBar from "../../Components/SearchBar/SearchBar";
 
 import Button from "../../Components/Button/Button";
-import MoviesList from "../../Components/MoviesList/MoviesList";
+
+import { Switch, Route, useParams } from "react-router-dom";
+import { Suspense, lazy } from "react";
 
 const MoviesPage = () => {
   const [query, setQuery] = useState("");
@@ -14,6 +16,14 @@ const MoviesPage = () => {
 
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { path } = useParams();
+
+  const MovieDetailsPage = lazy(() =>
+    import("../MovieDetailsPage/MovieDetailsPage")
+  );
+  const MovieList = lazy(() =>
+    import("../../Components/MoviesList/MoviesList")
+  );
 
   const handleFormSubmit = (query) => {
     setQuery(query);
@@ -59,9 +69,22 @@ const MoviesPage = () => {
   return (
     <>
       <>
-        <SearchBar onSubmit={handleFormSubmit} />
+        <Suspense fallback={<Loader />}>
+          <Switch>
+            <Route path={`${path}/:movieId`}>
+              <MovieDetailsPage />
+            </Route>
+            <Route exact path="/movies">
+              <SearchBar onSubmit={handleFormSubmit} />
+              {moviesListNotEmpty && <MovieList movies={movies} />}
+            </Route>
+          </Switch>
+        </Suspense>
+        {loadMoreMovies && <Button onLoadMore={loadMore} />}
+
+        {/* <SearchBar onSubmit={handleFormSubmit} />
         <>{moviesListNotEmpty && <MoviesList movies={movies} />}</>
-        <>{loadMoreMovies && <Button onLoadMore={loadMore} />}</>
+        <>{loadMoreMovies && <Button onLoadMore={loadMore} />}</> */}
       </>
     </>
   );
