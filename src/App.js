@@ -1,5 +1,5 @@
 import "./App.css";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Navigation from "./Navigation/Navigation";
 import Loader from "./Components/Loader/Loader";
@@ -35,9 +35,10 @@ function App() {
             <MovieDetailsPage />
           </Route>
 
-          <Route>
+          <Route path="error">
             <NotFound />
           </Route>
+          <Redirect to="/" />
         </Switch>
       </Suspense>
     </div>

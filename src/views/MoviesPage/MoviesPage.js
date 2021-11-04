@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+
 import fetchMoviesAPI from "../../services/movies-api";
 import PropTypes from "prop-types";
-import s from "./MoviesPage.module.css";
+
 import SearchBar from "../../Components/SearchBar/SearchBar";
-import noPosterAvailable from "../../images/no-poster-available.jpg";
+
 import Button from "../../Components/Button/Button";
+import MoviesList from "../../Components/MoviesList/MoviesList";
 
 const MoviesPage = () => {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const ImageBaseUrl = "https://image.tmdb.org/t/p/w342";
+
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -59,29 +60,7 @@ const MoviesPage = () => {
     <>
       <>
         <SearchBar onSubmit={handleFormSubmit} />
-        <>
-          <ul className={s.moviesGallery}>
-            {moviesListNotEmpty &&
-              movies.map((movie) => (
-                <li key={movie.id} className={s.moviesGalleryItem}>
-                  <Link to={`movies/${movie.id}`}>
-                    <h2 className={s.Title}>
-                      {movie.name || movie.original_title}
-                    </h2>
-                    <img
-                      src={
-                        movie.poster_path
-                          ? `${ImageBaseUrl}${movie.poster_path}`
-                          : noPosterAvailable
-                      }
-                      alt={movie.title}
-                      className={s.moviesGalleryItemImage}
-                    />
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </>
+        <>{moviesListNotEmpty && <MoviesList movies={movies} />}</>
         <>{loadMoreMovies && <Button onLoadMore={loadMore} />}</>
       </>
     </>

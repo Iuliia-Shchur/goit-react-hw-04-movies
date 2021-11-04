@@ -1,0 +1,30 @@
+.wrapper {
+  display: flex;
+  margin-bottom: 30px;
+  padding: 30px;
+}
+
+.image {
+  margin-right: 50px;
+}
+.title {
+  font-size: 26px;
+  color: #ad1b81;
+}
+
+.subTitle {
+  font-size: 22px;
+  color: #ad1b81;
+}
+
+.text {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.date {
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #ffffff;
+}

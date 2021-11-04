@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+
 import fetchMoviesAPI from "../../services/movies-api";
 import Button from "../../Components/Button/Button";
-import noPosterAvailable from "../../images/no-poster-available.jpg";
+import MoviesList from "../../Components/MoviesList/MoviesList";
 import s from "./HomePage.module.css";
 import PropTypes from "prop-types";
 
@@ -10,7 +10,6 @@ const HomePage = () => {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const ImageBaseUrl = "https://image.tmdb.org/t/p/w342";
 
   useEffect(() => {
     setLoading(true);
@@ -30,8 +29,6 @@ const HomePage = () => {
     };
     fetchTrendingMoviesHomePage();
   }, [page]);
-
-  console.log(movies);
 
   const loadMore = () => {
     setLoading(!loading);
@@ -53,29 +50,7 @@ const HomePage = () => {
     <>
       <>
         <h1 className={s.header}>Trending movies</h1>
-        <>
-          <ul className={s.moviesGallery}>
-            {moviesListNotEmpty &&
-              movies.map((movie) => (
-                <li key={movie.id} className={s.moviesGalleryItem}>
-                  <Link to={`movies/${movie.id}`}>
-                    <h2 className={s.Title}>
-                      {movie.name || movie.original_title}
-                    </h2>
-                    <img
-                      src={
-                        movie.poster_path
-                          ? `${ImageBaseUrl}${movie.poster_path}`
-                          : noPosterAvailable
-                      }
-                      alt={movie.title}
-                      className={s.moviesGalleryItemImage}
-                    />
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </>
+        <>{moviesListNotEmpty && <MoviesList movies={movies} />}</>
       </>
       <>{loadMoreMovies && <Button onLoadMore={loadMore} />}</>
     </>

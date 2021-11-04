@@ -2,9 +2,12 @@ import { useState } from "react";
 import s from "./SearchBar.module.css";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
+import { useHistory, useLocation } from "react-router-dom";
 
 function Searchbar({ onSubmit }) {
   const [query, setQuery] = useState("");
+  const history = useHistory();
+  const location = useLocation();
 
   const handleQueryChange = (e) => {
     setQuery(e.target.value.toLowerCase());
@@ -15,6 +18,7 @@ function Searchbar({ onSubmit }) {
     if (query.trim() === "") {
       return toast.error("Enter your query!");
     }
+    history.push({ ...location, search: `query=${query}` });
     onSubmit(query);
     setQuery("");
   };
