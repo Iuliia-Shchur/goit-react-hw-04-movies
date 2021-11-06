@@ -38,7 +38,7 @@ function App() {
           <Route path="/notfound">
             <NotFound />
           </Route>
-          <Redirect to="/notfound" />
+          {/* <Redirect to="/notfound" /> */}
         </Switch>
       </Suspense>
     </div>
