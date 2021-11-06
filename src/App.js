@@ -35,10 +35,10 @@ function App() {
             <MovieDetailsPage />
           </Route>
 
-          <Route>
+          <Route path="/notfound">
             <NotFound />
           </Route>
-          <Redirect to="/" />
+          <Redirect to="/notfound" />
         </Switch>
       </Suspense>
     </div>

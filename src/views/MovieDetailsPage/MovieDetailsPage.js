@@ -32,9 +32,8 @@ const MovieDetailsPage = () => {
   }, [movieId]);
 
   const handleGoBackButton = () => {
-    history.push(location?.state?.from ?? "/");
+    history.push(`${location?.state?.from}`);
     console.log(location);
-    setQuery(query);
   };
 
   return (
@@ -51,9 +50,10 @@ const MovieDetailsPage = () => {
             <li>
               <NavLink
                 to={{
-                  pathname: `${url}/cast`,
+                  pathname: `/movies/${movieId}/cast`,
                   state: {
-                    from: location ?? "/movie",
+                    from: history.location.state.from,
+                    label: "back to movies from cast",
                   },
                 }}
                 className={s.link}
@@ -64,9 +64,10 @@ const MovieDetailsPage = () => {
             <li>
               <NavLink
                 to={{
-                  pathname: `${url}/reviews`,
+                  pathname: `/movies/${movieId}/reviews`,
                   state: {
-                    from: location ?? "/movie",
+                    from: history.location.state.from,
+                    label: "back to movies from cast",
                   },
                 }}
                 className={s.link}
