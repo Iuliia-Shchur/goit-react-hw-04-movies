@@ -1,5 +1,11 @@
+import s from "./NotFound.module.css";
+
 const NotFound = () => {
-  return <p>Nothing was found! Please, go back home</p>;
+  return (
+    <p className={s.text}>
+      Nothing was found! Please, go back to the Home page!
+    </p>
+  );
 };
 
 export default NotFound;

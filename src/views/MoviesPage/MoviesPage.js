@@ -7,7 +7,7 @@ import SearchBar from "../../Components/SearchBar/SearchBar";
 
 import Button from "../../Components/Button/Button";
 
-import { Switch, Route, useParams } from "react-router-dom";
+import { Switch, Route, useParams, useLocation } from "react-router-dom";
 import { Suspense, lazy } from "react";
 
 const MoviesPage = () => {
@@ -17,6 +17,8 @@ const MoviesPage = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const { path } = useParams();
+  const location = useLocation();
+  const search = new URLSearchParams(location.search).get("query") ?? "";
 
   const MovieDetailsPage = lazy(() =>
     import("../MovieDetailsPage/MovieDetailsPage")
@@ -31,12 +33,12 @@ const MoviesPage = () => {
   };
 
   useEffect(() => {
-    if (!query) return;
+    if (!search) return;
     setLoading(true);
 
     const fetchSearchMovies = async () => {
       try {
-        const results = await fetchMoviesAPI.fetchMovies(query, page);
+        const results = await fetchMoviesAPI.fetchMovies(search, query, page);
         setMovies((movies) => [...movies, ...results]);
         if (page !== 1) {
           scrollWindow();
@@ -48,7 +50,7 @@ const MoviesPage = () => {
       }
     };
     fetchSearchMovies();
-  }, [query, page]);
+  }, [page, query, search]);
 
   const loadMore = () => {
     setLoading(!loading);

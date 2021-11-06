@@ -35,7 +35,7 @@ function App() {
             <MovieDetailsPage />
           </Route>
 
-          <Route path="/notfound">
+          <Route>
             <NotFound />
           </Route>
           {/* <Redirect to="/notfound" /> */}
