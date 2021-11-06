@@ -32,7 +32,7 @@ const MovieDetailsPage = () => {
   }, [movieId]);
 
   const handleGoBackButton = () => {
-    history.push(`${location?.state?.from}`);
+    history.push(location?.state?.from ?? "/");
     console.log(location);
   };
 
