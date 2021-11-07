@@ -1,10 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import {
-  useParams,
-  useRouteMatch,
-  useHistory,
-  useLocation,
-} from "react-router";
+import { useParams, useHistory, useLocation } from "react-router";
 import fetchMoviesAPI from "../../services/movies-api";
 import { NavLink, Route, Switch } from "react-router-dom";
 import MovieDetails from "../../Components/MovieDetails/MovieDetails";
@@ -21,15 +16,20 @@ const MovieDetailsPage = () => {
   const location = useLocation();
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
-  const { url } = useRouteMatch();
-  const [query, setQuery] = useState("");
+
   console.log(location);
   useEffect(() => {
     fetchMoviesAPI
       .fetchMovieDetails(movieId)
-      .then(setMovie)
-      .catch((err) => console.log(err.message));
-  }, [movieId]);
+      .then((movie) => {
+        if (location.state) {
+          setMovie(movie);
+        } else {
+          history.push((location.pathname = "/notFound"));
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [movieId, history, location]);
 
   const handleGoBackButton = () => {
     history.push(location?.state?.from ?? "/");
@@ -52,7 +52,7 @@ const MovieDetailsPage = () => {
                 to={{
                   pathname: `/movies/${movieId}/cast`,
                   state: {
-                    from: history.location.state.from,
+                    from: history.location.state?.from ?? "/movies",
                     label: "back to movies from cast",
                   },
                 }}
@@ -66,7 +66,7 @@ const MovieDetailsPage = () => {
                 to={{
                   pathname: `/movies/${movieId}/reviews`,
                   state: {
-                    from: history.location.state.from,
+                    from: history.location.state?.from ?? "/movies",
                     label: "back to movies from cast",
                   },
                 }}
